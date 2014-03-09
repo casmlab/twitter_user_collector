@@ -47,6 +47,27 @@ def connect() :
 
     return sql.connect(**db_params)
 
+def getUserId(conn, tweet, twitter_id, user_type): 
+    cursor = conn.cursor()
+    try :
+        cursor.execute("SELECT id FROM users_user WHERE twitter_id = %s" % twitter_id)
+        conn.commit()
+        if cursor.rowcount == 1:
+            row = cursor.fetchone()
+            if row[0] == "None":
+                user_id = addUser(conn, tweet, user_type, twitter_id)
+            else:
+                user_id = row[0]
+        else:
+            user_id = addUser(conn, tweet, user_type, twitter_id)
+    except sql.Error as err :
+        print(">>>> Warning: Could not check whether user exists: %s" % str(err))
+        print("     Query: %s" % cursor.statement)
+        
+    cursor.close()
+    return user_id
+
+
 # add a user to the db whether s/he's a sender, was mentioned, or was replied to
 def addUser(conn, tweet, user_type, user_id) :
     cursor = conn.cursor()
@@ -199,29 +220,13 @@ def addUserMentions(conn, tweet) :
             print(">>>> Warning: Could not add Mention: %s" % str(err))
             print("     Query: %s" % cursor.statement)
             
-        try :
-            cursor.execute("SELECT id FROM users_user WHERE twitter_id = %s" % mention["id_str"])
-            conn.commit()
-        except sql.Error as err :
-            print(">>>> Warning: Could not add mention: %s" % str(err))
-            print("     Query: %s" % cursor.statement)
-        if cursor.rowcount == 1:
-            row = cursor.fetchone()
-            user_id = row[0]
-            if row[0] == "None":
-                user_id = addUser(conn, tweet, "mention", mention["id_str"])
-            else:
-                print "rowcount = %s. id = %s" % (cursor.rowcount, row[0])
-                user_id = row[0]
-        else:
-            user_id = addUser(conn, tweet, "mention", mention["id_str"])
-            print "user_id = %s" % user_id
+        user_id = getUserId(conn, tweet, mention["id_str"], "mention")
+            
         # add the relationship mention-user to the appropriate table
         user_mention_values = [
             mention_id,
             user_id
         ]
-        print user_mention_values
         try :
             cursor.execute(user_mentions_query, user_mention_values)
             conn.commit()
@@ -258,12 +263,14 @@ def addLinks(conn, tweet) :
 # Add User_Tweet relationship to the many-to-many table
 def addUserTweets(conn, tweet):
     cursor = conn.cursor()
-
+    
+    user_id = getUserId(conn, tweet, tweet["user"]["id"], "sender")
+    
     # insert source user
     source_query = "INSERT INTO users_userstweets (user_id, tweet_id, source, target) " \
         "VALUES(%s, %s, %s, %s)"
 
-    values = [tweet["user"]["id"], tweet["id_str"], "True", "False"]
+    values = [user_id, tweet["id_str"], 1, 0]
     try:
         cursor.execute(source_query, values)
         conn.commit()
@@ -273,10 +280,13 @@ def addUserTweets(conn, tweet):
 
     # insert target user (if there is one)
     if tweet["in_reply_to_user_id"] :
+        # check to see if the user exists
+        user_id = getUserId(conn, tweet, tweet["in_reply_to_user_id"], "reply")
+        
         target_query = "INSERT INTO users_userstweets (user_id, tweet_id, source, target) " \
             "VALUES(%s, %s, %s, %s)"
 
-        values = [tweet["in_reply_to_user_id"], tweet["id_str"], "False", "True"]
+        values = [tweet["in_reply_to_user_id"], tweet["id_str"], 0, 1]
         try:
             cursor.execute(target_query, values)
             conn.commit()
