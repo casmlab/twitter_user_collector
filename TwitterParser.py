@@ -98,24 +98,24 @@ def addUser(conn, tweet, user_type, user_id) :
         elif user_type == "mention":
             values = [
                 user_id,
-                "NULL", # name
-                "NULL", # fullname
-                "NULL", # followers
-                "NULL", # friends
-                "NULL", # favourites
-                "NULL", # statuses
-                "NULL", # time_zone
+                "", # name
+                "", # fullname
+                "", # followers
+                "", # friends
+                "", # favourites
+                "", # statuses
+                "", # time_zone
             ]
         elif user_type == "reply":
             values = [
                 tweet["in_reply_to_user_id"],
-                "NULL", # name
-                "NULL", # fullname
-                "NULL", # followers
-                "NULL", # friends
-                "NULL", # favourites
-                "NULL", # statuses
-                "NULL", # time_zone
+                "", # name
+                "", # fullname
+                "", # followers
+                "", # friends
+                "", # favourites
+                "", # statuses
+                "", # time_zone
             ]
         try :
             cursor.execute(put_user_query, values)
@@ -125,9 +125,51 @@ def addUser(conn, tweet, user_type, user_id) :
             print(">>>> Warning: Could not add User: %s" % str(err))
             print("     Query: %s" % cursor.statement)
             sys.exit()
-                
+        
     cursor.close()
     return user_id
+
+def updateUser(conn, tweet, user_id):
+    cursor = conn.cursor()
+    
+    try :
+        cursor.execute("SELECT id FROM users_user WHERE twitter_id = %s AND tweets = 0" % user_id)
+        conn.commit()
+    except sql.Error as err :
+        print(">>>> Warning: Could not add User: %s" % str(err))
+        print("     Query: %s" % cursor.statement)
+    if cursor.rowcount == 1:
+        row = cursor.fetchone()
+        user_id = row[0]
+        update_user_query = "UPDATE users_user SET " \
+            "twitter_name = %s, " \
+            "fullname = %s, " \
+            "followers = %s, " \
+            "following = %s, " \
+            "favorites = %s, " \
+            "tweets = %s, " \
+            "timezone = %s " \
+            "WHERE id = %s"
+    
+        values = [
+            tweet["user"]["screen_name"],
+            tweet["user"]["name"],
+            tweet["user"]["followers_count"],
+            tweet["user"]["friends_count"],
+            tweet["user"]["favourites_count"],
+            tweet["user"]["statuses_count"],
+            tweet["user"]["time_zone"],
+            user_id,
+        ]
+        try :
+            cursor.execute(update_user_query, values)
+            conn.commit()
+        except sql.Error as err :
+            print(">>>> Warning: Could not update user: %s" % str(err))
+            print("     Query: %s" % cursor.statement)        
+        finally :
+            cursor.close()
+
 
 # Add a tweet to the DB
 def addTweet(conn, tweet) :
@@ -264,7 +306,11 @@ def addLinks(conn, tweet) :
 def addUserTweets(conn, tweet):
     cursor = conn.cursor()
     
-    user_id = getUserId(conn, tweet, tweet["user"]["id"], "sender")
+    try :
+        user_id = getUserId(conn, tweet, tweet["user"]["id"], "sender")
+    except :
+        print "Can't getUserId for %s" % tweet["user"]["id"]
+        sys.exit()
     
     # insert source user
     source_query = "INSERT INTO users_userstweets (user_id, tweet_id, source, target) " \
@@ -318,9 +364,10 @@ if __name__ == '__main__' :
 
         for file in os.listdir(dir):
             f = open(dir+'/'+file, 'r')
+            print "Working on %s " % f
             tweets = collections.deque()
             try:
-            #       tweets = [json.loads(line) for line in f.readlines()]
+            #   tweets = [json.loads(line) for line in f.readlines()]
                 tweets = convert(json.loads(f.read()))
             except ValueError as err:
                 print("%s in %s" % (err, file))
@@ -340,23 +387,17 @@ if __name__ == '__main__' :
                 success = addTweet(conn, tweet)
                 # addTweet(conn, tweet)
 
-                # Show status logging
-                if args.verbose :
-                    sys.stdout.write("\rProgress: " + str(count) + "/" + str(total))
-                count = count + 1
-
                 # Insert the tweet entities in the DB
-                if success :
-                    addUserTweets(conn, tweet)
-                    addHashtags(conn, tweet)
-                    addUserMentions(conn, tweet)
-                    addLinks(conn, tweet)
-                else :
-                    print("Failed to insert from %s" % file)
-
+                if success == False:
+                    print("Failed to insert tweets from %s." % file)
+                addUserTweets(conn, tweet)
+                addHashtags(conn, tweet)
+                addUserMentions(conn, tweet)
+                addLinks(conn, tweet)
+                updateUser(conn, tweet, tweet["user"]["id"])
                 # print("Processed %s tweets in %s." % (total_results, file))
                 run_total_count = run_total_count + total_results
-
+            print "Done with %s " % f
     except sql.Error as err :
         print(err)
         print("Terminating.")
