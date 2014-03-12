@@ -1,4 +1,5 @@
-import argparse, collections, configparser, fnmatch, json, math, mysql.connector as sql, os, requests, sys, time
+import argparse, collections, fnmatch, json, math, mysql.connector as sql, os, requests, sys, time
+from ConfigParser import SafeConfigParser
 from datetime import datetime
 from mysql.connector import errorcode
 from requests import HTTPError
@@ -24,22 +25,17 @@ def convert(input):
 
 # Connect to MySQL using config entries
 def connect() :
-    config = configparser.ConfigParser()
+    config = SafeConfigParser()
     script_dir = os.path.dirname(__file__)
     config_file = os.path.join(script_dir, 'config/settings.cfg')
     config.read(config_file)
-
+    sections = config.sections(); sections.remove("MySQL")
     db_params = {
-            # 'user' : config["MySQL"]["user"],
-            # 'password' : config["MySQL"]["password"],
-            # 'host' : config["MySQL"]["host"],
-            # 'port' : int(config["MySQL"]["port"]),
-            # 'database' : config["MySQL"]['database'],
-            'user' : 'root',
-            'password' : 'root',
-            'host' : 'localhost',
-            'port' : 8889,
-            'database' : 'congress-refactored',
+            'user' : config.get("MySQL","user"),
+            'password' : config.get("MySQL","password"),
+            'host' : config.get("MySQL","host"),
+            'port' : int(config.get("MySQL","port")),
+            'database' : config.get("MySQL","database"),
             'charset' : 'utf8',
             'collation' : 'utf8_general_ci',
             'buffered' : True
@@ -362,42 +358,42 @@ if __name__ == '__main__' :
         # Get the Tweets
         dir = '/Users/libbyh/Dropbox/CASM/Public Officials Social Media/Datasets/congress-tweets-feb2014'
 
-        for file in os.listdir(dir):
-            f = open(dir+'/'+file, 'r')
-            print "Working on %s " % f
-            tweets = collections.deque()
-            try:
-            #   tweets = [json.loads(line) for line in f.readlines()]
-                tweets = convert(json.loads(f.read()))
-            except ValueError as err:
-                print("%s in %s" % (err, file))
-                continue
-
-            total_results = 0
-
-            count = 1
-            total = len(tweets)
-
-            for tweet in tweets :
-
-                # total_results = total_results + 1
-                # print "now on tweet %s" % tweet["text"]
-
-                # Insert the tweet in the DB
-                success = addTweet(conn, tweet)
-                # addTweet(conn, tweet)
-
-                # Insert the tweet entities in the DB
-                if success == False:
-                    print("Failed to insert tweets from %s." % file)
-                addUserTweets(conn, tweet)
-                addHashtags(conn, tweet)
-                addUserMentions(conn, tweet)
-                addLinks(conn, tweet)
-                updateUser(conn, tweet, tweet["user"]["id"])
-                # print("Processed %s tweets in %s." % (total_results, file))
-                run_total_count = run_total_count + total_results
-            print "Done with %s " % f
+        # for file in os.listdir(dir):
+        #     f = open(dir+'/'+file, 'r')
+        #     print "Working on %s " % f
+        #     tweets = collections.deque()
+        #     try:
+        #     #   tweets = [json.loads(line) for line in f.readlines()]
+        #         tweets = convert(json.loads(f.read()))
+        #     except ValueError as err:
+        #         print("%s in %s" % (err, file))
+        #         continue
+        # 
+        #     total_results = 0
+        # 
+        #     count = 1
+        #     total = len(tweets)
+        # 
+        #     for tweet in tweets :
+        # 
+        #         # total_results = total_results + 1
+        #         # print "now on tweet %s" % tweet["text"]
+        # 
+        #         # Insert the tweet in the DB
+        #         success = addTweet(conn, tweet)
+        #         # addTweet(conn, tweet)
+        # 
+        #         # Insert the tweet entities in the DB
+        #         if success == False:
+        #             print("Failed to insert tweets from %s." % file)
+        #         addUserTweets(conn, tweet)
+        #         addHashtags(conn, tweet)
+        #         addUserMentions(conn, tweet)
+        #         addLinks(conn, tweet)
+        #         updateUser(conn, tweet, tweet["user"]["id"])
+        #         # print("Processed %s tweets in %s." % (total_results, file))
+        #         run_total_count = run_total_count + total_results
+        #     print "Done with %s " % f
     except sql.Error as err :
         print(err)
         print("Terminating.")
