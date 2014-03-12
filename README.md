@@ -11,8 +11,8 @@ What You Need Before you Start
 ------------------------------
 You need a list of Twitter screen names stored in a plain text file, one name per line.
 
-Setup
------
+Setup and Go
+------------
 1. Create a MySQL database using ```schema.mysql```
 2. Set your variables to the right values in 	```getUserTimeline.py```
 3. Run ```getUserTimeline.py```
