@@ -18,3 +18,4 @@ Setup
 3. Run ```getUserTimeline.py```
 4. Create a ```settings.cfg``` that looks like ```settings_example.cfg``` but with your values
 5. Run ```parseUserTimeline.py``` (will take a while, maybe even a day)
+
