@@ -356,44 +356,44 @@ if __name__ == '__main__' :
         print("Connected")
 
         # Get the Tweets
-        dir = '/Users/libbyh/Dropbox/CASM/Public Officials Social Media/Datasets/congress-tweets-feb2014'
+        dir = '[FULL PATH TO WHERE YOUR JSON FILES ARE]'
 
-        # for file in os.listdir(dir):
-        #     f = open(dir+'/'+file, 'r')
-        #     print "Working on %s " % f
-        #     tweets = collections.deque()
-        #     try:
-        #     #   tweets = [json.loads(line) for line in f.readlines()]
-        #         tweets = convert(json.loads(f.read()))
-        #     except ValueError as err:
-        #         print("%s in %s" % (err, file))
-        #         continue
-        # 
-        #     total_results = 0
-        # 
-        #     count = 1
-        #     total = len(tweets)
-        # 
-        #     for tweet in tweets :
-        # 
-        #         # total_results = total_results + 1
-        #         # print "now on tweet %s" % tweet["text"]
-        # 
-        #         # Insert the tweet in the DB
-        #         success = addTweet(conn, tweet)
-        #         # addTweet(conn, tweet)
-        # 
-        #         # Insert the tweet entities in the DB
-        #         if success == False:
-        #             print("Failed to insert tweets from %s." % file)
-        #         addUserTweets(conn, tweet)
-        #         addHashtags(conn, tweet)
-        #         addUserMentions(conn, tweet)
-        #         addLinks(conn, tweet)
-        #         updateUser(conn, tweet, tweet["user"]["id"])
-        #         # print("Processed %s tweets in %s." % (total_results, file))
-        #         run_total_count = run_total_count + total_results
-        #     print "Done with %s " % f
+        for file in os.listdir(dir):
+            f = open(dir+'/'+file, 'r')
+            print "Working on %s " % f
+            tweets = collections.deque()
+            try:
+            #   tweets = [json.loads(line) for line in f.readlines()]
+                tweets = convert(json.loads(f.read()))
+            except ValueError as err:
+                print("%s in %s" % (err, file))
+                continue
+        
+            total_results = 0
+        
+            count = 1
+            total = len(tweets)
+        
+            for tweet in tweets :
+        
+                # total_results = total_results + 1
+                # print "now on tweet %s" % tweet["text"]
+        
+                # Insert the tweet in the DB
+                success = addTweet(conn, tweet)
+                # addTweet(conn, tweet)
+        
+                # Insert the tweet entities in the DB
+                if success == False:
+                    print("Failed to insert tweets from %s." % file)
+                addUserTweets(conn, tweet)
+                addHashtags(conn, tweet)
+                addUserMentions(conn, tweet)
+                addLinks(conn, tweet)
+                updateUser(conn, tweet, tweet["user"]["id"])
+                # print("Processed %s tweets in %s." % (total_results, file))
+                run_total_count = run_total_count + total_results
+            print "Done with %s " % f
     except sql.Error as err :
         print(err)
         print("Terminating.")
