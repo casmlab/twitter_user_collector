@@ -365,6 +365,7 @@ if __name__ == '__main__' :
             try:
             #   tweets = [json.loads(line) for line in f.readlines()]
                 tweets = convert(json.loads(f.read()))
+                f.close()
             except ValueError as err:
                 print("%s in %s" % (err, file))
                 continue
