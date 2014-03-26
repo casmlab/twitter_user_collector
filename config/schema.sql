@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
-# Host: 127.0.0.1 (MySQL 5.5.25)
-# Database: congress-example
-# Generation Time: 2014-03-12 18:58:34 +0000
+# Host: localhost (MySQL 5.5.30-1)
+# Database: user-timeline-test
+# Generation Time: 2014-03-26 18:14:39 +0000
 # ************************************************************
 
 
@@ -135,7 +135,7 @@ CREATE TABLE `users_legislator` (
   `wikipedia_id` varchar(40) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `users_legislator_8854ddcc` (`twitter_id_id`),
-  KEY `users_legislator_db395e7a` (`twitter_id`),
+  KEY `users_legislator_db395e7a` (`twitter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
