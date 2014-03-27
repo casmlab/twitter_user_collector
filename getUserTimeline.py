@@ -6,9 +6,9 @@ import logging
 import math
 
 # CHECK THESE SETTINGS FIRST
-logfile = "FULL PATH" # where should the script log its progress and warnings
-listfile = open('FULL PATH','r') # list of users to collect, one screen_name per line
-outfilepath = "FULL PATH" # where should the script save its results
+logfile = "FULL PATH TO FILE" # where should the script log its progress and warnings
+listfile = open('FULL PATH TO FILE','r') # list of users to collect, one screen_name per line
+outfilepath = "FULL PATH TO FOLDER - INCLUDE TRAILING SLASH" # where should the script save its results
 api = Twitter(api_version='1.1', auth=OAuth(OAUTH_TOKEN, OAUTH_SECRET, CONSUMER_KEY, CONSUMER_SECRET)) # your Twitter OAuth credentials
 
 # helper functions
