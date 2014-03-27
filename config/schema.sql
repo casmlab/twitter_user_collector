@@ -11,15 +11,6 @@
 # ************************************************************
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
 # Dump of table hashtags_hashtag
 # ------------------------------------------------------------
 
@@ -91,54 +82,12 @@ CREATE TABLE `tweets_tweet` (
   `created_at` datetime NOT NULL,
   `text` varchar(255) NOT NULL,
   `source` varchar(255) NOT NULL,
-  `location_geo` longtext NOT NULL,
+  `location_geo` longtext DEFAULT NULL,
   `location_geo_0` decimal(14,10) DEFAULT NULL,
   `location_geo_1` decimal(14,10) DEFAULT NULL,
   `iso_language` varchar(3) NOT NULL,
   PRIMARY KEY (`tweet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
-# Dump of table users_legislator
-# ------------------------------------------------------------
-
-CREATE TABLE `users_legislator` (
-  `id` int(11) NOT NULL,
-  `last_name` varchar(17) NOT NULL,
-  `first_name` varchar(11) NOT NULL,
-  `gender` varchar(1) NOT NULL,
-  `chamber` varchar(3) NOT NULL,
-  `state` varchar(2) NOT NULL,
-  `party` varchar(11) NOT NULL,
-  `url` varchar(36) NOT NULL,
-  `address` varchar(55) NOT NULL,
-  `phone` varchar(12) NOT NULL,
-  `contact_form` varchar(103) NOT NULL,
-  `rss_url` varchar(106) NOT NULL,
-  `twitter_id_id` varchar(21) NOT NULL,
-  `twitter_id` varchar(55) NOT NULL,
-  `facebook` varchar(27) NOT NULL,
-  `facebook_id` int(11) DEFAULT NULL,
-  `youtube` varchar(20) NOT NULL,
-  `youtube_id` int(11) DEFAULT NULL,
-  `bioguide_id` int(11) DEFAULT NULL,
-  `thomas_id` int(11) DEFAULT NULL,
-  `opensecrets_id` int(11) DEFAULT NULL,
-  `lis_id` int(11) DEFAULT NULL,
-  `cspan_id` int(11) DEFAULT NULL,
-  `govtrack_id` int(11) DEFAULT NULL,
-  `votesmart_id` int(11) DEFAULT NULL,
-  `ballotpedia_id` int(11) DEFAULT NULL,
-  `washington_post_id` int(11) DEFAULT NULL,
-  `icpsr_id` int(11) DEFAULT NULL,
-  `wikipedia_id` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `users_legislator_8854ddcc` (`twitter_id_id`),
-  KEY `users_legislator_db395e7a` (`twitter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
 
 # Dump of table users_user
 # ------------------------------------------------------------
@@ -172,13 +121,3 @@ CREATE TABLE `users_userstweets` (
   KEY `users_userstweets_6340c63c` (`user_id`),
   KEY `users_userstweets_36542d72` (`tweet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
-
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
