@@ -5,11 +5,6 @@ from mysql.connector import errorcode
 from requests import HTTPError
 from requests import ConnectionError
 
-# Print strings in verbose mode
-def verbose(info) :
-    if args.verbose:
-        printUTF8(info)
-
 def printUTF8(info) :
     print(info.encode('ascii', 'replace').decode())
 
@@ -339,14 +334,13 @@ def addUserTweets(conn, tweet):
 
 # Main function
 if __name__ == '__main__' :
-        # Handle command line arguments
-    parser = argparse.ArgumentParser(description="A Python parser for storing Twitter JSON in a database. Based on TwitterGoggles, requires .")
-    parser.add_argument('-v','--verbose', default=False, action="store_true", help="Show additional logs")
-    args = parser.parse_args()
-
+    config = SafeConfigParser()
+    script_dir = os.path.dirname(__file__)
+    config_file = os.path.join(script_dir, 'config/settings.cfg')
+    config.read(config_file)
+    
     # Display startup info
     print("vvvvv Start:", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    verbose("Verbose Mode: Enabled")
 
     print("Connecting to database...")
 
@@ -356,7 +350,7 @@ if __name__ == '__main__' :
         print("Connected")
 
         # Get the Tweets
-        dir = '[FULL PATH TO WHERE YOUR JSON FILES ARE]'
+        dir = config.get('files','outfolder')
 
         for file in os.listdir(dir):
             f = open(dir+'/'+file, 'r')
