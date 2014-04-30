@@ -1,6 +1,6 @@
 user-timeline-tools
 ======================
-(v.1 - March 12, 2014)
+(v.2 - April 30, 2014)
 
 user-timeline-tools are a set of Python scripts that get UserTimeline data from Twitter and parse it into a MySQL database so that a Django app can serve it up.
 
