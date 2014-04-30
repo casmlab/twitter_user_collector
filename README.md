@@ -6,7 +6,7 @@ user-timeline-tools are a set of Python scripts that get UserTimeline data from 
 
 Python Versions
 ---------------
-user-timeline-tools was written for Python 2.7. It has not been testing on other versions.
+user-timeline-tools was written for Python 2.7. It has not been tested on other versions.
 
 What You Need Before you Start
 ------------------------------
