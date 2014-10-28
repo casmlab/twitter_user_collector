@@ -105,7 +105,7 @@ CREATE TABLE `users_user` (
   `timezone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `twitter_id` (`twitter_id`),
-  INDEX `twitter_id` (`twitter_id`),
+  INDEX `twitter_id` (`twitter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
