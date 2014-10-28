@@ -122,5 +122,5 @@ CREATE TABLE `users_userstweets` (
   PRIMARY KEY (`id`),
   KEY `users_userstweets_6340c63c` (`user_id`),
   KEY `users_userstweets_36542d72` (`tweet_id`),
-  INDEX `user_id` (`user_id)
+  INDEX `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
