@@ -87,7 +87,7 @@ CREATE TABLE `tweets_tweet` (
   `location_geo_1` decimal(14,10) DEFAULT NULL,
   `iso_language` varchar(3) NOT NULL,
   PRIMARY KEY (`tweet_id`),
-  INDEX `tweet_id` (`tweet_id`)
+  INDEX `i_tweet_id` (`tweet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 # Dump of table users_user
@@ -105,7 +105,7 @@ CREATE TABLE `users_user` (
   `timezone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `twitter_id` (`twitter_id`),
-  INDEX `twitter_id` (`twitter_id`)
+  INDEX `i_twitter_id` (`twitter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
