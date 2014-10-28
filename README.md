@@ -14,7 +14,7 @@ You need a list of Twitter screen names stored in a plain text file, one name pe
 
 Setup and Go
 ------------
-1. Create a MySQL database using ```schema.mysql```
+1. Create a MySQL database using ```schema.sql```
 2. Set your variables to the right values in 	```getUserTimeline.py```
 3. Run ```getUserTimeline.py```
 4. Create a ```settings.cfg``` that looks like ```settings_example.cfg``` but with your values
