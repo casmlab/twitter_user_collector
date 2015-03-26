@@ -28,7 +28,10 @@ def get_user_timelines(names, outfolder, api):
     		is_protected = str(user_info['protected'])
     	except TwitterHTTPError as e:
     		n_tweets = 0
-    		logging.info(str(e))
+    		logging.error(str(e))
+    		if e.e.code == 401:
+    		    print("Not Authorized - Check your Twitter settings.\n Exiting.")
+    		    sys.exit()
     	if (is_protected == "True"):
     		logging.info("Oops, tweets for %s are protected. Moving on." % name)
     		continue
@@ -68,10 +71,10 @@ if __name__ == '__main__' :
     
     logging.basicConfig(filename=logfile,level=logging.DEBUG)
     
-    api = Twitter(api_version='1.1', auth=OAuth(config.get('twitter', 'consumer_key'),
-                         config.get('twitter', 'consumer_secret'),
-                         config.get('twitter', 'access_token'),
-                         config.get('twitter', 'access_token_secret')))
+    api = Twitter(api_version='1.1', auth=OAuth(config.get('twitter', 'access_token'),
+                         config.get('twitter', 'access_token_secret'),
+                         config.get('twitter', 'consumer_key'),
+                         config.get('twitter', 'consumer_secret')))
 
     names = get_user_names(listfile)
     
