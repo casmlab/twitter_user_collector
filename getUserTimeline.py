@@ -1,3 +1,4 @@
+import io
 import json
 import sys, os
 from ConfigParser import SafeConfigParser
@@ -47,17 +48,20 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
     	if n_loops > 15:
     		n_loops = 15
     	try:
-    		for i_loop in range(0, n_loops):
-    			outfilename = ".".join([user,str(i_loop),'json'])
-    			outfilename = "".join([outfolder,outfilename])
-    			outfile = open(outfilename, 'a')
+    	    outfilename = ".".join([user,'json'])
+    	    outfilename = "".join([outfolder,outfilename])
+    	    outfile = io.open(outfilename, mode='wt', encoding='utf8')
+    	    
+    	    for i_loop in range(0, n_loops):
     			if user_id == "True":
     			    tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
     			else:
     			    tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
     			if tweets:
-    				outfile.write(json.dumps(tweets))
-    			outfile.close()
+    				outfile.write(json.dumps(tweets,ensure_ascii=False, encoding='utf8'))
+    				outfile.write(u'\n')
+    				outfile.flush()
+            outfile.close()
     	except:
     		for i in sys.exc_info():
     			logging.warning(i)
