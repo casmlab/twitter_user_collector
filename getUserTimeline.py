@@ -32,15 +32,15 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
     	    is_protected = str(user_info['protected'])
     	except TwitterHTTPError as e:
     		n_tweets = 0
-    		logging.error(str(e))
-    		if e.e.code == 401:
+    		if e.e.code == 401: # Not authorized
     		    print("Not Authorized - Check your Twitter settings.\n Exiting.")
+    		    logging.error(str(e))
     		    sys.exit()
+        	elif e.e.code == 404: # Not found
+        	    logging.info("Oops, %s has no tweets or the account info is wrong. Moving on." % user)
+        	    continue
     	if (is_protected == "True"):
     		logging.info("Oops, tweets for %s are protected. Moving on." % user)
-    		continue
-    	elif (n_tweets == 0):
-    		logging.info("Oops, %s has no tweets or the account info is wrong. Moving on." % user)
     		continue
     	else:
     		logging.info("Getting %s tweets for %s. (Or ~3200, whichever is lower.)" % (n_tweets, user))
@@ -53,11 +53,16 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
     	    outfile = io.open(outfilename, mode='wt', encoding='utf8')
     	    
     	    for i_loop in range(0, n_loops):
-    			if user_id == "True":
-    			    tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
-    			else:
-    			    tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
-    			if tweets:
+    	        try:
+                    if user_id == "True":
+                        tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
+                    else:
+        			    tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
+                except TwitterHTTPError as e:
+                    if e.e.code == 429: # Rate limit exceeded
+                		logging.info("Rate limit exceeded. Sleeping for 15 minutes.")
+                		sleep(60 * 15)
+                if tweets:
     				outfile.write(json.dumps(tweets,ensure_ascii=False, encoding='utf8'))
     				outfile.write(u'\n')
     				outfile.flush()
@@ -65,7 +70,7 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
     	except:
     		for i in sys.exc_info():
     			logging.warning(i)
-    	# sleep(60)
+    	# sleep(20) # rest a little bit so we get fewer 429 errors
 
 # Main function
 if __name__ == '__main__' :
