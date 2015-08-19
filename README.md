@@ -14,17 +14,17 @@ You need a list of Twitter screen_names or user_ids stored in a plain text file,
 
 You also need [OAuth credentials from Twitter.](https://dev.twitter.com/oauth/overview) 
 
-Tell the script where to store data using [config/settings_example.cfg](). Remember to save that file as ```settings.cfg``` once you've entered your settings.
+Tell the script where to store data using [config/settings_example.cfg](config/settings_example.cfg). Remember to save that file as ```settings.cfg``` once you've entered your settings.
 
 Setup and Go
 ------------
 If you just want to get the tweets into JSON files:
 
-1. Create a ```settings.cfg``` that looks like [config/settings_example.cfg]() but with your values
-2. Run [getUserTimeline.py]() (will take a while, maybe even days)
+1. Create a ```settings.cfg``` that looks like [config/settings_example.cfg](config/settings_example.cfg) but with your values
+2. Run [getUserTimeline.py](getUserTimeline.py) (will take a while, maybe even days)
 
 	Once you have the tweets, if you want to parse into a Django-ready DB:
 
-3. Create a MySQL database using [config/schema.sql]()
-4. Run [parseUserTimeline.py]() (will take a while, maybe even a day)
+3. Create a MySQL database using [config/schema.sql](config/schema.sql)
+4. Run [parseUserTimeline.py](parseUserTimeline.py) (will take a while, maybe even a day)
 
