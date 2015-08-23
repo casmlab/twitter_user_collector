@@ -1,0 +1,10 @@
+Pyrex == 0.9.4.1
+backports == 1.0
+Genshi == 0.7
+lxml == 3.4.4
+mock == 1.3.0
+mysql == 0.0.2
+ordereddict == 1.1
+org == 1.0.0
+simplejson == 3.8.0
+python_twitter == 2.2
