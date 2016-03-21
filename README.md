@@ -8,6 +8,12 @@ Python Versions
 ---------------
 ```user-timeline-tools``` was written for Python 2.7. It has not been tested on other versions.
 
+Other Requirements
+------------------
+**Option 1**: If you're using [Anaconda](https://www.continuum.io/downloads) to manage your python environments and packages, you can recreate our python environment from the provided `environment.yml` file: `conda env create -n name-of-environment -f environment.yml`. To switch to your newly created environment, `source activate name-of-environment`.
+
+**Option 2**: Alternatively, you can install the requirements for user-timeline-tools using pip: `pip install -r requirements.txt`.
+
 What You Need Before you Start
 ------------------------------
 You need a list of Twitter screen_names or user_ids stored in a plain text file, one name per line. You can use screen_names OR ids but not both in the same file. 
