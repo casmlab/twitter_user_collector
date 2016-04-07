@@ -1,5 +1,6 @@
 # project-specific
 settings.cfg
+.ipynb_checkpoints/
 
 ##### Python common gitignore ####
 # Byte-compiled / optimized / DLL files
