@@ -55,36 +55,37 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
             n_loops = int(math.ceil(n_tweets/200.0)) # Twitter lets us get 200 at a time, max 3200
         if n_loops > 15:
             n_loops = 15
-            # try: # make a JSON file named user.json and put it in the folder we specified
+            try: # make a JSON file named user.page_number.json and put it in the folder we specified
 
-            for i_loop in range(0, n_loops):
-                outfilename = ".".join([user,str(i_loop),'json'])
-                outfilename = "".join([outfolder,outfilename])
-                outfile = io.open(outfilename, mode='wt', encoding='utf8')
-                try:
-                    if user_id == "True": # if we're searching by user_id
-                        tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
-                    else: # if we're searching by screen_name or handle
-                        tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
-                except TwitterHTTPError as e:
-                    if e.e.code == 429: # Rate limit exceeded
-                        logging.info("Rate limit exceeded. Sleeping for 15 minutes.")
-                        sleep(60 * 15)
-                if tweets: # we got tweets, lets dump 'em to JSON
-                    outfile.write(json.dumps(tweets,ensure_ascii=False, encoding='utf8'))
-                    outfile.write(u'\n')
-                    outfile.flush()
-                outfile.close() # clean up
-            # except: # something went wrong, could be that Twitter's down, log it and we'll look later
-            #     for i in sys.exc_info():
-            #         logging.warning(i)
+                for i_loop in range(0, n_loops):
+                    outfilename = ".".join([user,str(i_loop),'json'])
+                    outfilename = "".join([outfolder,outfilename])
+                    outfile = io.open(outfilename, mode='wt', encoding='utf8')
+                    try:
+                        if user_id == "True": # if we're searching by user_id
+                            tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
+                        else: # if we're searching by screen_name or handle
+                            tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
+                    except TwitterHTTPError as e:
+                        if e.e.code == 429: # Rate limit exceeded
+                            logging.info("Rate limit exceeded. Sleeping for 15 minutes.")
+                            sleep(60 * 15)
+                    if tweets: # we got tweets, lets dump 'em to JSON
+                        outfile.write(json.dumps(tweets,ensure_ascii=False, encoding='utf8'))
+                        outfile.write(u'\n')
+                        outfile.flush()
+                    outfile.close() # clean up
+            except: # something went wrong, could be that Twitter's down, log it and we'll look later
+                for i in sys.exc_info():
+                    logging.warning(i)
 
 # Main function
 if __name__ == '__main__' :
 
     config = SafeConfigParser()
     script_dir = os.path.dirname(__file__)
-    config_file = os.path.join(script_dir, 'config/settings.cfg')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_file = os.path.join(script_dir, '../settings.cfg')
     config.read(config_file)
     
     # tell script where to put the JSON files returned
