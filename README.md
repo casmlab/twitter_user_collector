@@ -8,7 +8,7 @@ This repo contains [Jupyter](http://jupyter.org/) notebooks and Python scripts f
 - [```/files```](files/) - contains files used and produced by the scripts
 - [```/scripts```](scripts/) - the Python action
 - [```environment.yml```](environment.yml) - file for creating an Anaconda environment with all the dependencies you need
-- [```requirements.txt```](requirements.txt - file for installing dependencies via ```pip```
+- [```requirements.txt```](requirements.txt) - file for installing dependencies via ```pip```
 - [```settings-example.cfg```](/config/settings-example.cfg) - an example settings file that you can copy to ```settings.cfg``` to make the scripts and notebook work
 - [```twitter.ipynb```](twitter.ipynb) - Jupyter notebook that explains the collection and analysis processes and runs the scripts (the meat of the repo, really)
 
