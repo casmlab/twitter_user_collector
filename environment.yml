@@ -1,4 +1,4 @@
-name: user-timeline-tools
+name: twitter_user_collector
 dependencies:
 - anaconda-client=1.2.2=py27_0
 - clyent=1.2.1=py27_0
