@@ -17,23 +17,7 @@ def convert(input):
     else:
         return input
 
-if __name__ == '__main__' :
-
-	config = SafeConfigParser()
-	script_dir = os.path.dirname(os.path.abspath(__file__))
-	config_file = os.path.join(script_dir, '../settings.cfg')
-	config.read(config_file)
-	outfolder = config.get('files','outfolder')
-	out_filename = config.get('files', 'parsed_file')
-
-	glob_search = outfolder + "*.json"
-
-	try: # try to open the file for writing
-		out_file = open(out_filename, 'wb')
-	except:
-		print("Couldn't open output file for saving parsed data. Quitting.")
-		sys.exit()
-
+def to_ilan_csv(folder):
 	# write the column headers
 	csv_writer = csv.writer(out_file, quoting=csv.QUOTE_ALL)
 	headers = ["tweet_id", "handle", "username", "tweet_text", "has_image", "image_url", "created_at", "retweets", "hashtags", "mentions", "isRT", "isMT"]
@@ -41,10 +25,10 @@ if __name__ == '__main__' :
 
 	# open the JSON files we stored and parse them into the CSV file we're working on
 	try:
-		json_files = glob.glob(glob_search)
+		json_files = glob.glob(folder)
+		print("Parsing %s files." % len(json_files))
 		for file in json_files:
 			try:
-				print file
 				f = open(file, 'r')
 			except:
 				print("Couldn't open JSON file for parsing.")
@@ -103,10 +87,31 @@ if __name__ == '__main__' :
 				continue
 			f.close()
 
-
 	except:
 		print("Something went wrong. Quitting.")
+		for i in sys.exc_info():
+			print(i)
+
+if __name__ == '__main__' :
+
+	config = SafeConfigParser()
+	script_dir = os.path.dirname(os.path.abspath(__file__))
+	config_file = os.path.join(script_dir, '../settings.cfg')
+	config.read(config_file)
+	outfolder = config.get('files','outfolder')
+	out_filename = config.get('files', 'parsed_file')
+
+	glob_search = outfolder + "*.json"
+
+	try: # try to open the file for writing
+		out_file = open(out_filename, 'wb')
+	except:
+		print("Couldn't open output file for saving parsed data. Quitting.")
+		sys.exit()
+
+	to_ilan_csv(glob_search)
 
 	out_file.close
+	print("Done parsing. See your data in %s." % out_filename)
 
-
+sys.exit()
