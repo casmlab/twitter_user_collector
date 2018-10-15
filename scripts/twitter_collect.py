@@ -35,7 +35,7 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
                 n_tweets = user_info['statuses_count']
                 is_protected = str(user_info['protected'])
         except TwitterHTTPError as e:
-            if e.e.code == 401: # Not authorized
+            if e.e.code == 401 or e.e.code == 400: # Not authorized
                 print("Not Authorized - Check your Twitter settings.\n Exiting.")
                 print(str(e))
                 sys.exit()
