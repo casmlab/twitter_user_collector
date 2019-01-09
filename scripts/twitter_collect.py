@@ -6,6 +6,7 @@ from twitter import *
 from time import sleep
 import math
 
+
 # get list of user_ids or screen_names to fetch
 def get_users(listfile):
     users = set()
@@ -62,9 +63,9 @@ def get_user_timelines(users, outfolder, api, user_id = "False"):
                 outfile = io.open(outfilename, mode='wt', encoding='utf8')
                 try:
                     if user_id == "True": # if we're searching by user_id
-                        tweets = api.statuses.user_timeline(user_id = user, count = 200, page = i_loop+1)
+                        tweets = api.statuses.user_timeline(tweet_mode = "extended", user_id = user, count = 200, page = i_loop+1)
                     else: # if we're searching by screen_name or handle
-                        tweets = api.statuses.user_timeline(screen_name = user, count = 200, page = i_loop+1)
+                        tweets = api.statuses.user_timeline(tweet_mode = "extended", screen_name = user, count = 200, page = i_loop+1)
                 except TwitterHTTPError as e:
                     if e.e.code == 429: # Rate limit exceeded
                         print("Rate limit exceeded. Sleeping for 15 minutes.")
@@ -88,6 +89,12 @@ if __name__ == '__main__' :
     config_file = os.path.join(script_dir, '../settings.cfg')
     config.read(config_file)
     
+    # redirect print statements to log file
+    old_stdout = sys.stdout
+    log_file = open(config.get('files','logfile'),"a+")
+
+    sys.stdout = log_file
+    
     # tell script where to put the JSON files returned
     listfile = config.get('files','listfile')
     outfolder = config.get('files','outfolder')
@@ -106,6 +113,11 @@ if __name__ == '__main__' :
     
     # go get their tweets
     get_user_timelines(users, outfolder, api, user_id)
+
+    # stop redirecting pring statements
+    sys.stdout = old_stdout
+    
+    log_file.close()
 
 sys.exit()
 
